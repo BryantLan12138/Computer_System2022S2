@@ -1,0 +1,129 @@
+// Calculates a = x*y
+// a is a local variable
+// x & y are static variables
+
+// Put your code here.
+
+/* the logic for this program is to
+   1) check out the value of x if x < 0, calculate abs of x and store in temp 0 if x >0 store x in temp 0
+   2) apply same procedure for y, store the updated (or not) value of y  store in temp 1
+   3) compare the value of x and y, due to the limit of running cycle, we want to limit the number of loop
+   as much as we can, so we would loop the number of min(x,y) times 
+   4) follow by 3), we use the second operand as the number of iteration, do swapping according to the value of x and y
+   let y be the number of iteration, x be the greater value 
+   5) setup 0 to temp 0 as final result
+   6) doing the loop, if y > 0, otherwise go to END_LOOP
+   7) inside of the loop, decrement the value of y by 1 each time, add the value of x to temp 2
+   8) check the sign of x and y correspondingly to decide the sign of the temp2
+   9) pop temp2 to local 0 
+*/
+
+// 1)
+
+push static 0	//push x
+push constant 0	//push 0
+gt
+
+if-goto ABS_X
+push static 0
+neg
+pop temp 0
+goto GET_ABS_Y
+
+label ABS_X
+push static 0
+pop temp 0
+goto GET_ABS_Y
+
+// 2)
+label GET_ABS_Y
+push static 1
+push constant 0
+gt
+
+if-goto ABS_Y
+push static 1
+neg 
+pop temp 1
+goto COMPARE_X_Y
+
+label ABS_Y
+push static 1 
+pop temp 1
+goto COMPARE_X_Y
+
+// 3)
+label COMPARE_X_Y
+push temp 0
+push temp 1
+lt 
+if-goto SWAP
+goto RESET
+
+// 4)
+label SWAP
+push temp 0
+push temp 1
+pop temp 0
+pop temp 1
+goto RESET
+
+// 5) 
+label RESET
+push constant 0
+pop temp 2
+
+// 6)
+label CHECK_Y
+push temp 1
+push constant 0
+gt 
+if-goto LOOP 
+goto END_LOOP
+
+// 7)
+label LOOP
+push temp 2
+push temp 0
+add
+pop temp 2 
+push temp 1
+push constant 1
+sub
+pop temp 1
+goto CHECK_Y
+
+// 8)
+label END_LOOP
+push static 0
+push constant 0
+gt 
+// one operand is positive
+if-goto ONE_POS
+push static 1 
+push constant 0
+gt 
+if-goto DIFFERENT_SIGN
+goto SAME_SIGN
+
+label ONE_POS
+push static 1
+push constant 0
+gt
+if-goto SAME_SIGN
+goto DIFFERENT_SIGN
+
+// 9)
+label DIFFERENT_SIGN
+push temp 2
+neg 
+pop local 0
+goto END
+
+label SAME_SIGN
+push temp 2
+pop local 0
+goto END
+
+label END
+goto END	//END the program

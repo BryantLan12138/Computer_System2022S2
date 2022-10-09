@@ -1,0 +1,21 @@
+// Calculates y = |x|
+// x & y are static variables
+
+// Put your code here.
+push static 0
+push constant 0
+// if x < 0 jmp to the label
+lt
+
+if-goto neg
+push static 0
+pop static 1
+goto END
+
+label neg
+push static 0
+neg
+pop static 1
+
+label END
+goto END
